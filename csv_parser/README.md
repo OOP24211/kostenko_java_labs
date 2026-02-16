@@ -1,4 +1,4 @@
-\# CSV Word Counter
+# CSV Word Counter
 
 
 
@@ -6,7 +6,7 @@ A lightweight Java application that analyzes text files, counts word frequencies
 
 
 
-\## Description
+## Description
 
 
 
@@ -14,7 +14,7 @@ This tool reads a text file, splits it into words, counts how many times each wo
 
 
 
-\## Features
+## Features
 
 
 
@@ -30,11 +30,11 @@ This tool reads a text file, splits it into words, counts how many times each wo
 
 
 
-\## How to Use
+## How to Use
 
 
 
-\### Compile:
+### Compile:
 
 ```bash
 
@@ -44,7 +44,7 @@ javac csvparser/\*.java
 
 
 
-\### Run:
+### Run:
 
 ```bash
 
