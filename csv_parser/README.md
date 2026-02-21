@@ -30,25 +30,17 @@ This tool reads a text file, splits it into words, counts how many times each wo
 
 
 
-## How to Use
+## How to Build
 
 
 
-### Compile:
 
-```bash
-
-javac csvparser/\*.java
-
+### Build with Maven
 ```
-
-
+mvn clean package
+```
 
 ### Run:
-
-```bash
-
-java csvparser.Main input.txt output.csv
-
 ```
-
+mvn exec:java -Dexec.mainClass="csvparser.Main" -Dexec.args="text_example/test.txt result.csv"
+```

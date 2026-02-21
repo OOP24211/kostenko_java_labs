@@ -13,7 +13,7 @@ public class Main {
             outputFile = args[1];
         }
         else{
-            inputFile="text.txt";
+            inputFile="src/test/resources/text_example/test.txt";
             outputFile="result.csv";
 
         }
