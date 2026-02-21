@@ -1,36 +1,27 @@
 package csvparser;
 
-import java.util.Map;
-import java.util.List;
+import csvparser.validator.FileValidator;
+import csvparser.validator.ValidationResult;
+
 public class Main {
     public static void main(String[] args) {
 
         String inputFile;
         String outputFile;
 
-        if(args.length ==2){
+        if (args.length == 2) {
             inputFile = args[0];
             outputFile = args[1];
-        }
-        else{
-            inputFile="src/test/resources/text_example/test.txt";
-            outputFile="result.csv";
-
+        } else {
+            inputFile = "src/test/resources/text_example/test.txt";
+            outputFile = "result.csv";
         }
 
-        String text = FileReaderUtil.readFile( inputFile);
-        //System.out.println(text);
-
-        //Мапа: Слово - частота
-        Map<String,Integer> freq = WordCounter.countWords(text);
-        //System.out.println(freq);
-
-        //Отсортированный по убыванию список пар: (слова,частота)
-        List<Map.Entry<String,Integer>> list = Sort.sortMap(freq);
-        System.out.println(list);
-
-        CSVWriter.writeCSV(outputFile, list);
-
+        FileValidator validator = new FileValidator();
+        ValidationResult check = validator.validate(inputFile, outputFile);
+        check.printReport();
+        if (!check.hasError()) {
+            TextProcessor.process(inputFile, outputFile);
+        }
     }
-
 }
