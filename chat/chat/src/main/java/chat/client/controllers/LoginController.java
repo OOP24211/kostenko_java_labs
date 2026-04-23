@@ -45,7 +45,7 @@ public class LoginController {
         errorLabel.setText("Подключение...");
 
         try {
-            // Создаём новый клиент при каждой попытке (на случай ошибок предыдущей)
+            //создаём новый клиент при каждой попытке
             if (client != null && client.isOpen()) {
                 client.close();
             }
@@ -60,7 +60,7 @@ public class LoginController {
                         openChatWindow(login, rooms);
                     } else if (msg.getType() == MessageType.AUTH_ERROR) {
                         errorLabel.setText(msg.getContent());
-                        // Закрываем соединение чтобы при следующей попытке создать новое
+
                         client.close();
                         client = null;
                     }
