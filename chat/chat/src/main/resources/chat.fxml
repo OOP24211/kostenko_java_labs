@@ -7,7 +7,7 @@
       fx:controller="chat.client.controllers.ChatController"
       spacing="0" prefWidth="600" prefHeight="500">
 
-    <!-- Левая панель: список комнат -->
+    <!-- левая панель: список комнат -->
     <VBox prefWidth="140" style="-fx-background-color: #2b2d31;">
         <Label text="КОМНАТЫ"
                style="-fx-text-fill: #96989d; -fx-font-size: 11; -fx-padding: 12 8 6 12; -fx-front-weight: bold;"/>
@@ -28,16 +28,16 @@
                   style="-fx-background-color: transparent; -fx-text-fill: #dcddde; -fx-font-size: 13;"/>
     </VBox>
 
-    <!-- Правая панель: чат -->
+    <!-- правая панель: чат -->
     <VBox HBox.hgrow="ALWAYS" style="-fx-background-color: #313338;">
 
-        <!-- Заголовок текущей комнаты -->
+        <!-- заголовок текущей комнаты -->
         <HBox style="-fx-background-color: #313338; -fx-border-color: #1e1f22; -fx-border-width: 0 0 1 0; -fx-padding: 10 16;">
             <Label fx:id="currentRoomLabel" text="# General"
                    style="-fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold;"/>
         </HBox>
 
-        <!-- Область сообщений -->
+        <!-- область сообщений -->
         <TextArea fx:id="chatArea"
                   VBox.vgrow="ALWAYS"
                   editable="false"
@@ -45,7 +45,7 @@
                   style="-fx-background-color: #313338; -fx-text-fill: #1B5583;
                          -fx-font-size: 13; -fx-border-color: transparent; -fx-padding: 8 16;"/>
 
-        <!-- Поле ввода -->
+        <!-- поле ввода -->
         <HBox spacing="8" style="-fx-padding: 0 16 12 16; -fx-background-color: #313338;">
             <TextField fx:id="messageField"
                        HBox.hgrow="ALWAYS"

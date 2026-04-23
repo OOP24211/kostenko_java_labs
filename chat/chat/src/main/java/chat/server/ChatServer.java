@@ -15,18 +15,16 @@ import java.util.Set; // Добавьте импорт
 public class ChatServer extends WebSocketServer {
     private final Gson gson = new Gson();
 
-    // ПЕРЕНЕСЛИ ВНУТРЬ КЛАССА
     private final Set<String> activeRooms = ConcurrentHashMap.newKeySet();
 
     private final Map<WebSocket, String> clientRooms = new ConcurrentHashMap<>();
     private final Map<WebSocket, String> clientNames = new ConcurrentHashMap<>();
 
-    // Удаляем старый String[] ROOMS, он больше не нужен
 
     public ChatServer(int port) {
         super(new InetSocketAddress(port));
 
-        // Загружаем комнаты из базы данных при старте
+        // загружаем комнаты из базы данных при старте
         java.util.List<String> savedRooms = DatabaseManager.getRooms();
         if (savedRooms.isEmpty()) {
             activeRooms.add("General");
@@ -86,11 +84,11 @@ public class ChatServer extends WebSocketServer {
         if (success) {
             clientNames.put(conn, username);
 
-            // Отправляем текущий список активных комнат
+            // отправляем текущий список активных комнат
             String roomList = String.join(",", activeRooms);
             conn.send(gson.toJson(new Message(MessageType.AUTH_SUCCESS, "SERVER", roomList)));
 
-            // Автоматически заходим в General
+            // автоматически заходим в General
             handleJoinRoom(conn, new Message(MessageType.JOIN_ROOM, username, "General"));
 
             System.out.println("[SERVER] " + (isRegistration ? "Регистрация" : "Вход") + ": " + username);

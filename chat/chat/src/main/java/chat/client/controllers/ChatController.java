@@ -28,10 +28,6 @@ public class ChatController {
         this.nickname = name;
     }
 
-    /**
-     * Вызывается из LoginController сразу после load().
-     * Заполняет список комнат и вешает обработчик выбора.
-     */
     public void setRooms(List<String> rooms) {
         roomListView.getItems().addAll(rooms);
         roomListView.getSelectionModel().select("General");
@@ -44,10 +40,6 @@ public class ChatController {
                 });
     }
 
-    /**
-     * Вызывается из LoginController — подключает живой WebSocket и вешает
-     * обработчик входящих сообщений.
-     */
     public void setClient(ChatClient client) {
         this.client = client;
         this.client.setOnMessageReceived(msg -> {
@@ -57,7 +49,7 @@ public class ChatController {
 
     @FXML
     public void initialize() {
-        // Пусто — соединение приходит через setClient()
+
     }
 
     @FXML
@@ -78,7 +70,6 @@ public class ChatController {
             newRoomField.clear();
         }
     }
-    // -------------------------------------------------------
 
     private void switchRoom(String roomName) {
         currentRoom = roomName;
@@ -94,7 +85,7 @@ public class ChatController {
     private void displayMessage(Message msg) {
         switch (msg.getType()) {
             case UPDATE_ROOMS:
-                // Очищаем старый список и загружаем новый из сообщения
+                // очищаем старый список и загружаем новый из сообщения
                 Platform.runLater(() -> {
                     java.util.List<String> rooms = java.util.Arrays.asList(msg.getContent().split(","));
                     roomListView.getItems().setAll(rooms);

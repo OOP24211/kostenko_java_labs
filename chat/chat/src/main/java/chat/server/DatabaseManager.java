@@ -3,7 +3,7 @@ package chat.server;
 import java.sql.*;
 
 public class DatabaseManager {
-    // Твои настройки PostgreSQL
+    // настройки PostgreSQL
     private static final String URL = "jdbc:postgresql://localhost:5432/postgres";
     private static final String USER = "postgres";
     private static final String PASS = "NKQAZ22";
@@ -12,13 +12,13 @@ public class DatabaseManager {
         try (Connection conn = connect()) {
             Statement stmt = conn.createStatement();
 
-            // 1. Создаем таблицу пользователей
+            //таблица пользователей
             stmt.execute("CREATE TABLE IF NOT EXISTS users (" +
                     "id SERIAL PRIMARY KEY, " +
                     "username TEXT UNIQUE NOT NULL, " +
                     "password TEXT NOT NULL)");
 
-            // 2. Создаем таблицу сообщений
+            //таблица сообщений
             stmt.execute("CREATE TABLE IF NOT EXISTS messages (" +
                     "id SERIAL PRIMARY KEY, " +
                     "room TEXT NOT NULL, " +
@@ -26,7 +26,7 @@ public class DatabaseManager {
                     "content TEXT, " +
                     "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
 
-            // 3. Создаем таблицу комнат (ТЕПЕРЬ ВНУТРИ БЛОКА)
+            //таблица комнат
             stmt.execute("CREATE TABLE IF NOT EXISTS rooms (" +
                     "id SERIAL PRIMARY KEY, " +
                     "name TEXT UNIQUE NOT NULL)");
@@ -94,7 +94,7 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-    // Добавим метод для сохранения истории
+    //метод для сохранения истории
     public static void saveMessage(String room, String sender, String content) {
         String sql = "INSERT INTO messages (room, sender, content) VALUES (?, ?, ?)";
         try (Connection conn = connect();
@@ -108,7 +108,7 @@ public class DatabaseManager {
         }
     }
     public static String getRecentMessages(String room, int limit) {
-        // Выбираем последние N сообщений для конкретной комнаты
+        // берем последние N сообщений для конкретной комнаты
         String sql = "SELECT sender, content FROM (SELECT * FROM messages WHERE room = ? ORDER BY timestamp DESC LIMIT ?) sub ORDER BY timestamp ASC";
         StringBuilder history = new StringBuilder();
 
