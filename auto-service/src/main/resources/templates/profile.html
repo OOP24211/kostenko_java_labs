@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет - Автосервис</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #f0f2f5;
+        }
+        .profile-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 30px;
+        }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .avatar i {
+            font-size: 50px;
+            color: #2a5298;
+        }
+        .info-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .nav-tabs .nav-link {
+            border: none;
+            color: #666;
+            font-weight: 500;
+        }
+        .nav-tabs .nav-link.active {
+            color: #2a5298;
+            border-bottom: 3px solid #2a5298;
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Навигация (как на главной) -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="/"><i class="fas fa-car me-2"></i>Автосервис "Мастер"</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/">Главная</a></li>
+                <li class="nav-item"><a class="nav-link" href="/services">Услуги</a></li>
+                <li class="nav-item"><a class="nav-link" href="/about">О нас</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/profile"><i class="fas fa-user me-1"></i>Личный кабинет</a></li>
+                <li class="nav-item"><a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt me-1"></i>Выход</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Шапка профиля -->
+<div class="profile-header">
+    <div class="container text-center">
+        <div class="avatar">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <h2 th:text="${user.fullName} ?: ${user.username}">Иван Иванов</h2>
+        <p class="mb-0"><i class="fas fa-envelope me-2"></i><span th:text="${user.email}">ivan@mail.ru</span></p>
+        <p><i class="fas fa-phone me-2"></i><span th:text="${user.phone} ?: 'Не указан'">+7 999 123-45-67</span></p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <!-- Статистика -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="stat-card bg-white shadow-sm">
+                <i class="fas fa-calendar-check fa-3x text-primary mb-2"></i>
+                <h4>0</h4>
+                <p class="text-muted mb-0">Записей</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="stat-card bg-white shadow-sm">
+                <i class="fas fa-car fa-3x text-primary mb-2"></i>
+                <h4>0</h4>
+                <p class="text-muted mb-0">Автомобилей</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="stat-card bg-white shadow-sm">
+                <i class="fas fa-clock fa-3x text-primary mb-2"></i>
+                <p class="text-muted mb-0">Дата регистрации</p>
+                <small th:text="${#dates.format(user.createdAt, 'dd.MM.yyyy')}">01.01.2024</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Вкладки -->
+    <div class="card info-card">
+        <div class="card-body">
+            <ul class="nav nav-tabs mb-4" id="profileTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">
+                        <i class="fas fa-info-circle me-2"></i>Мои данные
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="cars-tab" data-bs-toggle="tab" data-bs-target="#cars" type="button" role="tab">
+                        <i class="fas fa-car me-2"></i>Мои автомобили
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="bookings-tab" data-bs-toggle="tab" data-bs-target="#bookings" type="button" role="tab">
+                        <i class="fas fa-calendar-alt me-2"></i>Мои записи
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- Вкладка "Мои данные" -->
+                <div class="tab-pane fade show active" id="info" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="text-muted small">Имя пользователя</label>
+                                <p class="fw-bold" th:text="${user.username}">ivan123</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">Полное имя</label>
+                                <p class="fw-bold" th:text="${user.fullName} ?: 'Не указано'">Иван Иванов</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="text-muted small">Email</label>
+                                <p class="fw-bold" th:text="${user.email}">ivan@mail.ru</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">Телефон</label>
+                                <p class="fw-bold" th:text="${user.phone} ?: 'Не указан'">+7 999 123-45-67</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка "Мои автомобили" (обновлённая) -->
+                <div class="tab-pane fade" id="cars" role="tabpanel">
+                    <div th:if="${cars.isEmpty()}">
+                        <div class="text-center py-4">
+                            <i class="fas fa-car fa-4x text-muted mb-3"></i>
+                            <p>У вас пока нет добавленных автомобилей</p>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCarModal">
+                                <i class="fas fa-plus me-2"></i>Добавить автомобиль
+                            </button>
+                        </div>
+                    </div>
+                    <div th:if="${!cars.isEmpty()}">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>Марка</th>
+                                    <th>Модель</th>
+                                    <th>Год</th>
+                                    <th>Госномер</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="car : ${cars}">
+                                    <td th:text="${car.brand}">Toyota</td>
+                                    <td th:text="${car.model}">Camry</td>
+                                    <td th:text="${car.year}">2020</td>
+                                    <td th:text="${car.licensePlate} ?: '—'">А123ВС</td>
+                                    <td>
+                                        <form method="post" th:action="@{/profile/delete-car/{id}(id=${car.id})}"
+                                              onsubmit="return confirm('Удалить автомобиль?')">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addCarModal">
+                                <i class="fas fa-plus me-2"></i>Добавить ещё автомобиль
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка "Мои записи" -->
+                <div class="tab-pane fade" id="bookings" role="tabpanel">
+                    <div class="text-center py-4">
+                        <i class="fas fa-calendar-alt fa-4x text-muted mb-3"></i>
+                        <p>У вас пока нет записей на услуги</p>
+                        <a href="/booking" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Записаться на услугу
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно добавления автомобиля -->
+<div class="modal fade" id="addCarModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="fas fa-plus-circle me-2"></i>Добавить автомобиль</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="/profile/add-car">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Марка *</label>
+                        <input type="text" name="brand" class="form-control" placeholder="Toyota" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Модель *</label>
+                        <input type="text" name="model" class="form-control" placeholder="Camry" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Год выпуска *</label>
+                        <input type="number" name="year" class="form-control" placeholder="2020" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Госномер</label>
+                        <input type="text" name="licensePlate" class="form-control" placeholder="А123ВС">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Добавить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-dark text-white-50 py-4 mt-auto">
+    <div class="container text-center">
+        <small>&copy; 2024 Автосервис "Мастер". Все права защищены.</small>
+    </div>
+</footer>
+<div class="tab-pane fade" id="cars" role="tabpanel">
+    <div th:if="${cars.isEmpty()}">
+        <div class="text-center py-4">
+            <i class="fas fa-car fa-4x text-muted mb-3"></i>
+            <p>У вас пока нет добавленных автомобилей</p>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCarModal">
+                <i class="fas fa-plus me-2"></i>Добавить автомобиль
+            </button>
+        </div>
+    </div>
+    <div th:if="${!cars.isEmpty()}">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                <tr>
+                    <th>Марка</th>
+                    <th>Модель</th>
+                    <th>Год</th>
+                    <th>Госномер</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="car : ${cars}">
+                    <td th:text="${car.brand}">Toyota</td>
+                    <td th:text="${car.model}">Camry</td>
+                    <td th:text="${car.year}">2020</td>
+                    <td th:text="${car.licensePlate} ?: '—'">А123ВС</td>
+                    <td>
+                        <form method="post" th:action="@{/profile/delete-car/{id}(id=${car.id})}"
+                              onsubmit="return confirm('Удалить автомобиль?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-3">
+            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addCarModal">
+                <i class="fas fa-plus me-2"></i>Добавить ещё автомобиль
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
