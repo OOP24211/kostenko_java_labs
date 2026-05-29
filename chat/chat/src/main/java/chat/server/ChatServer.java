@@ -10,21 +10,17 @@ import org.java_websocket.server.WebSocketServer;
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.Set; // Добавьте импорт
+import java.util.Set;
 
 public class ChatServer extends WebSocketServer {
     private final Gson gson = new Gson();
-
     private final Set<String> activeRooms = ConcurrentHashMap.newKeySet();
-
     private final Map<WebSocket, String> clientRooms = new ConcurrentHashMap<>();
     private final Map<WebSocket, String> clientNames = new ConcurrentHashMap<>();
-
+    private final Map<String, byte[]> fileStorage = new ConcurrentHashMap<>();
 
     public ChatServer(int port) {
         super(new InetSocketAddress(port));
-
-        // загружаем комнаты из базы данных при старте
         java.util.List<String> savedRooms = DatabaseManager.getRooms();
         if (savedRooms.isEmpty()) {
             activeRooms.add("General");
@@ -56,8 +52,13 @@ public class ChatServer extends WebSocketServer {
                     handleAuth(conn, msg, true);
                     break;
                 case TEXT:
-                case FILE:
                     handleMessageInRoom(conn, msg);
+                    break;
+                case FILE:
+                    handleFileUpload(conn, msg);
+                    break;
+                case FILE_REQUEST:
+                    handleFileDownload(conn, msg);
                     break;
                 case JOIN_ROOM:
                     handleJoinRoom(conn, msg);
@@ -68,6 +69,42 @@ public class ChatServer extends WebSocketServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void handleFileUpload(WebSocket conn, Message msg) {
+        String currentRoom = clientRooms.get(conn);
+        if (currentRoom == null) return;
+
+        String key = System.currentTimeMillis() + "_" + msg.getFileName();
+        fileStorage.put(key, msg.getFileData());
+
+        boolean isImage = msg.getFileName().toLowerCase().matches(".*\\.(jpg|jpeg|png|gif|bmp)$");
+        boolean isSmall = msg.getFileData().length < 2 * 1024 * 1024;
+
+        if (isImage && isSmall) {
+            Message broadcast = new Message(MessageType.FILE, msg.getSender(), msg.getFileName(), msg.getFileData());
+            broadcast.setContent(key);
+            broadcastToRoom(currentRoom, broadcast);
+            System.out.println("[IMAGE] " + msg.getFileName() + " от " + msg.getSender());
+        } else {
+            Message broadcast = new Message(MessageType.FILE, msg.getSender(), msg.getFileName(), null);
+            broadcast.setContent(key);
+            broadcastToRoom(currentRoom, broadcast);
+            System.out.println("[FILE] " + msg.getFileName() + " от " + msg.getSender());
+        }
+    }
+
+    private void handleFileDownload(WebSocket conn, Message msg) {
+        String fileName = msg.getContent();
+
+        for (Map.Entry<String, byte[]> entry : fileStorage.entrySet()) {
+            if (entry.getKey().endsWith(fileName)) {
+                Message response = new Message(MessageType.FILE, "SERVER", fileName, entry.getValue());
+                conn.send(gson.toJson(response));
+                return;
+            }
+        }
+        conn.send(gson.toJson(new Message(MessageType.TEXT, "SERVER", "Файл не найден: " + fileName)));
     }
 
     private void handleAuth(WebSocket conn, Message msg, boolean isRegistration) {
@@ -83,14 +120,9 @@ public class ChatServer extends WebSocketServer {
 
         if (success) {
             clientNames.put(conn, username);
-
-            // отправляем текущий список активных комнат
             String roomList = String.join(",", activeRooms);
             conn.send(gson.toJson(new Message(MessageType.AUTH_SUCCESS, "SERVER", roomList)));
-
-            // автоматически заходим в General
             handleJoinRoom(conn, new Message(MessageType.JOIN_ROOM, username, "General"));
-
             System.out.println("[SERVER] " + (isRegistration ? "Регистрация" : "Вход") + ": " + username);
         } else {
             String errorMsg = isRegistration ? "Логин уже занят" : "Неверный логин/пароль";
@@ -125,7 +157,7 @@ public class ChatServer extends WebSocketServer {
         if (newRoomName != null && !newRoomName.isEmpty()) {
             if (!activeRooms.contains(newRoomName)) {
                 activeRooms.add(newRoomName);
-                DatabaseManager.saveRoom(newRoomName); // Сохраняем в БД!
+                DatabaseManager.saveRoom(newRoomName);
                 System.out.println("[SERVER] Создана комната: " + newRoomName);
                 broadcastFullRoomList();
             }
@@ -136,7 +168,6 @@ public class ChatServer extends WebSocketServer {
         String allRooms = String.join(",", activeRooms);
         Message updateMsg = new Message(MessageType.UPDATE_ROOMS, "SERVER", allRooms);
         String json = gson.toJson(updateMsg);
-
         for (WebSocket client : getConnections()) {
             client.send(json);
         }
@@ -145,7 +176,6 @@ public class ChatServer extends WebSocketServer {
     private void handleMessageInRoom(WebSocket conn, Message msg) {
         String currentRoom = clientRooms.get(conn);
         if (currentRoom == null) return;
-
         DatabaseManager.saveMessage(currentRoom, msg.getSender(), msg.getContent());
         broadcastToRoom(currentRoom, msg);
     }

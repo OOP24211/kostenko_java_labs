@@ -47,16 +47,19 @@
 
         <!-- поле ввода -->
         <HBox spacing="8" style="-fx-padding: 0 16 12 16; -fx-background-color: #313338;">
+            <Button text="📎"
+                    onAction="#onSendFile"
+                    style="-fx-background-color: #4e5058; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 12; -fx-cursor: hand;"
+                    prefWidth="40"/>
             <TextField fx:id="messageField"
                        HBox.hgrow="ALWAYS"
-                       promptText="Написать сообщение..."
+                       promptText="Написать сообщение... (/open, /save, /download)"
                        onAction="#onSendMessage"
-                       style="-fx-background-color: #383a40; -fx-text-fill: #dcddde;
-                              -fx-prompt-text-fill: #72767d; -fx-border-color: transparent;
-                              -fx-background-radius: 8; -fx-padding: 8 12;"/>
-            <Button text="Отправить" onAction="#onSendMessage"
-                    style="-fx-background-color: #5865f2; -fx-text-fill: white;
-                           -fx-background-radius: 8; -fx-padding: 8 14; -fx-cursor: hand;"/>
+                       style="-fx-background-color: #383a40; -fx-text-fill: #dcddde; -fx-prompt-text-fill: #72767d; -fx-border-color: transparent; -fx-background-radius: 8; -fx-padding: 8 12;"/>
+            <Button text="Отправить"
+                    onAction="#onSendMessage"
+                    style="-fx-background-color: #5865f2; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 14; -fx-cursor: hand;"/>
         </HBox>
+
     </VBox>
 </HBox>

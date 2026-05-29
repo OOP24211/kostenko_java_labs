@@ -30,6 +30,7 @@ public class Message {
     public String getFileName() { return fileName; }
     public byte[] getFileData() { return fileData; }
 
-    // сеттер для receiver
+    public void setContent(String content) {this.content = content;}
+
     public void setReceiver(String receiver) { this.receiver = receiver; }
 }

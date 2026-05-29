@@ -1,13 +1,14 @@
 package chat.model;
 
 public enum MessageType {
-    AUTH_REQUEST,   // запрос на вход (логин + пароль)
-    REG_REQUEST,    // запрос на регистрацию
-    AUTH_SUCCESS,   // ответ: вход разрешен
-    AUTH_ERROR,     // ответ: ошибка (неверный пароль или логин занят)
-    TEXT,           // обычное сообщение
-    FILE,           // передача файла (с байтами)
-    JOIN_ROOM,      // запрос на вход в комнату
+    AUTH_REQUEST,
+    REG_REQUEST,
+    AUTH_SUCCESS,
+    AUTH_ERROR,
+    TEXT,
+    FILE,
+    FILE_REQUEST,
+    JOIN_ROOM,
     LEAVE_ROOM,
     CREATE_ROOM,
     UPDATE_ROOMS
