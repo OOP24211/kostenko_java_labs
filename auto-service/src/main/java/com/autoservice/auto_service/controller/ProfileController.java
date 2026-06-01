@@ -71,7 +71,7 @@ public class ProfileController {
 
         Car car = carRepository.findById(id).orElse(null);
 
-        // Проверяем, что автомобиль принадлежит текущему пользователю (безопасность!)
+        // Проверяем, что автомобиль принадлежит текущему пользователю
         if (car != null && car.getUser().getId().equals(user.getId())) {
             carRepository.delete(car);
         }

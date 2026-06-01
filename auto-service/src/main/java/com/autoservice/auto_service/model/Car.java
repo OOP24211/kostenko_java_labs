@@ -12,19 +12,19 @@ public class Car {
     private Long id;
 
     @Column(nullable = false)
-    private String brand;          // марка: Toyota, BMW
+    private String brand;
 
     @Column(nullable = false)
-    private String model;          // модель: Camry, X5
+    private String model;
 
     @Column(nullable = false)
-    private Integer year;          // год выпуска: 2020
+    private Integer year;
 
-    private String licensePlate;   // госномер: А123ВС
+    private String licensePlate;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;             // какой пользователь владеет авто
+    private User user;
 
     private LocalDateTime createdAt;
 

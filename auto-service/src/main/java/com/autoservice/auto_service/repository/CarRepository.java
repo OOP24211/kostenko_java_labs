@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface CarRepository extends JpaRepository<Car, Long> {
 
-    // Найти все автомобили пользователя
+    // автомобили пользователя
     List<Car> findByUser(User user);
 
-    // Посчитать количество автомобилей у пользователя
+    // количество автомобилей у пользователя
     long countByUser(User user);
 }
