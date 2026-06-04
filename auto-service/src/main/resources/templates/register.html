@@ -49,13 +49,13 @@
                 </div>
                 <div class="register-body">
 
-                    <!-- Сообщение об ошибке -->
+                    <!-- сообщение об ошибке -->
                     <div th:if="${error}" class="alert alert-danger" role="alert">
                         <i class="fas fa-exclamation-triangle me-2"></i>
                         <span th:text="${error}"></span>
                     </div>
 
-                    <!-- Форма регистрации -->
+                    <!-- форма регистрации -->
                     <form method="post" action="/register" th:action="@{/register}">
 
                         <div class="mb-3">

@@ -52,19 +52,19 @@
                 </div>
                 <div class="login-body">
 
-                    <!-- Сообщение об успехе (после регистрации) -->
+                    <!-- сообщение об успехе (после регистрации) -->
                     <div th:if="${message}" class="alert alert-success" role="alert">
                         <i class="fas fa-check-circle me-2"></i>
                         <span th:text="${message}"></span>
                     </div>
 
-                    <!-- Сообщение об ошибке (неверный логин/пароль) -->
+                    <!-- сообщение об ошибке (неверный логин/пароль) -->
                     <div th:if="${error}" class="alert alert-danger" role="alert">
                         <i class="fas fa-exclamation-triangle me-2"></i>
                         <span th:text="${error}"></span>
                     </div>
 
-                    <!-- ВАЖНО: форма отправляется на /login (обрабатывается Spring Security) -->
+                    <!-- форма отправляется на /login (обрабатывается Spring Security) -->
                     <form method="post" action="/login" th:action="@{/login}">
 
                         <div class="mb-3">
