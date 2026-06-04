@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     List<Appointment> findByUserOrderByDateDescTimeDesc(User user);
-    long countByUser(User user);  // ← ДОБАВЬ ЭТО
+    long countByUser(User user);
 }
