@@ -1,0 +1,25 @@
+# IDE
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+
+# Build
+target/
+*.class
+*.jar
+*.war
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Maven wrapper
+.mvn/
+mvnw
+mvnw.cmd
