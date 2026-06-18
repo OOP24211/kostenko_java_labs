@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="chat.client.controllers.ChatController"
+      spacing="0" prefWidth="600" prefHeight="500">
+
+    <!-- левая панель: список комнат -->
+    <VBox prefWidth="140" style="-fx-background-color: #2b2d31;">
+        <Label text="КОМНАТЫ"
+               style="-fx-text-fill: #96989d; -fx-font-size: 11; -fx-padding: 12 8 6 12; -fx-front-weight: bold;"/>
+        <HBox spacing="5" style="-fx-padding: 0 10 10 10;">
+            <TextField fx:id="newRoomField"
+                       promptText="Имя"
+                       HBox.hgrow="ALWAYS"
+                       style="-fx-background-color: #1e1f22; -fx-text-fill: white; -fx-background-radius: 4;"/>
+            <Button text="ADD"
+                    onAction="#onCreateRoom"
+                    prefWidth="30"
+                    style="-fx-background-color: #5865f2; -fx-text-fill: white; -fx-front-weight: bold; -fx-cursor: hand;"/>
+
+        </HBox>
+
+        <ListView fx:id="roomListView"
+                  VBox.vgrow="ALWAYS"
+                  style="-fx-background-color: transparent; -fx-text-fill: #dcddde; -fx-font-size: 13;"/>
+    </VBox>
+
+    <!-- правая панель: чат -->
+    <VBox HBox.hgrow="ALWAYS" style="-fx-background-color: #313338;">
+
+        <!-- заголовок текущей комнаты -->
+        <HBox style="-fx-background-color: #313338; -fx-border-color: #1e1f22; -fx-border-width: 0 0 1 0; -fx-padding: 10 16;">
+            <Label fx:id="currentRoomLabel" text="# General"
+                   style="-fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <!-- область сообщений -->
+        <TextArea fx:id="chatArea"
+                  VBox.vgrow="ALWAYS"
+                  editable="false"
+                  wrapText="true"
+                  style="-fx-background-color: #313338; -fx-text-fill: #1B5583;
+                         -fx-font-size: 13; -fx-border-color: transparent; -fx-padding: 8 16;"/>
+
+        <!-- поле ввода -->
+        <HBox spacing="8" style="-fx-padding: 0 16 12 16; -fx-background-color: #313338;">
+            <Button text="📎"
+                    onAction="#onSendFile"
+                    style="-fx-background-color: #4e5058; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 12; -fx-cursor: hand;"
+                    prefWidth="40"/>
+            <TextField fx:id="messageField"
+                       HBox.hgrow="ALWAYS"
+                       promptText="Написать сообщение... (/open, /save, /download)"
+                       onAction="#onSendMessage"
+                       style="-fx-background-color: #383a40; -fx-text-fill: #dcddde; -fx-prompt-text-fill: #72767d; -fx-border-color: transparent; -fx-background-radius: 8; -fx-padding: 8 12;"/>
+            <Button text="Отправить"
+                    onAction="#onSendMessage"
+                    style="-fx-background-color: #5865f2; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 14; -fx-cursor: hand;"/>
+        </HBox>
+
+    </VBox>
+</HBox>

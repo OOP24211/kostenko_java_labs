@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="chat.client.controllers.LoginController" style="-fx-padding: 20;">
+    <Label text="Вход в чат" style="-fx-font-size: 18;"/>
+    <TextField fx:id="loginField" promptText="Логин"/>
+    <PasswordField fx:id="passwordField" promptText="Пароль"/>
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Войти" onAction="#onLogin"/>
+        <Button text="Регистрация" onAction="#onRegister"/>
+    </HBox>
+    <Label fx:id="errorLabel" textFill="red"/>
+</VBox>
